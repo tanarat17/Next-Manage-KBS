@@ -11,7 +11,10 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        kanit: ['Kanit', 'sans-serif'], // เพิ่มฟอนต์ Kanit
+      },
     },
   },
-  plugins: [require('daisyui'),],
+  plugins: [require('daisyui')],
 };

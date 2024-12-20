@@ -5,12 +5,13 @@
 :root {
   --background: #ffffff;
   /* --foreground: #171717; */
+  --font-family: 'Kanit', Arial, Helvetica, sans-serif; /* เพิ่มฟอนต์ Kanit */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a; /* กำหนดสีพื้นหลังเป็นสีดำ */
-    --foreground: #ededed; /* กำหนดสีตัวอักษรเป็นสีขาวอมเทา */
+    --foreground: #e0dede; /* กำหนดสีตัวอักษรเป็นสีขาวอมเทา */
   }
 }
 
@@ -18,4 +19,12 @@ body {
  
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  
 }
+
+.kanit-font {
+  font-family: 'Kanit', Arial, Helvetica, sans-serif;
+}
+
+
+
