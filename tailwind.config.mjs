@@ -8,13 +8,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        // background: "var(--background)",
+        // foreground: "var(--foreground)",
       },
       fontFamily: {
-        kanit: ['Kanit', 'sans-serif'], // เพิ่มฟอนต์ Kanit
+        kanit: ["Kanit", "sans-serif"], // เพิ่มฟอนต์ Kanit
       },
     },
   },
-  plugins: [require('daisyui')],
+  plugins: [require("daisyui")],
 };

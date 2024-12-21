@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";  // ใช้สำหรับการนำทางไปยังหน้าต่าง ๆ
-import MenuCard from "../components/Menu/MenuCard";
-import ModalData from "../components/Modal/ModalData";
+// Home Component
+import React from "react";
+import MenuCard from "./components/Menu/MenuCard";
+import { useRouter } from "next/navigation";
+import ModalData from "./components/Modal/ModalData";
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const router = useRouter(); // ใช้ hook สำหรับการนำทาง
+  const router = useRouter();
 
-  const navigateToPage = (page) => {  
-    router.push(page); 
+  const navigateToPage = (page) => {
+    router.push(page);
   };
 
   return (
@@ -18,7 +18,7 @@ export default function Home() {
           <MenuCard
             imageSrc="/pass.png"
             altText="Pass Image"
-            onClick={() => setIsModalOpen(true)} 
+            onClick={() => navigateToPage("./components/Modal/ModalData")}
           />
         </div>
 
@@ -26,11 +26,10 @@ export default function Home() {
           <MenuCard
             imageSrc="/live-fix.png"
             altText="Live Image"
-            onClick={() => navigateToPage('/live')} 
+            onClick={() => navigateToPage("/live")}
           />
         </div>
       </main>
-      <ModalData isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }

@@ -1,43 +1,137 @@
 // pages/api/manage/listpass-api.js
 
-import mysql from 'mysql2';
+import mysql from "mysql2/promise";
 
-const connection = mysql.createConnection({
+const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-});
+};
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
+  let connection;
+
+  try {
+    connection = await mysql.createConnection(dbConfig);
+
+    const { method } = req;
+
+    switch (method) {
+      case "GET":
+        await handleGet(req, res, connection);
+        break;
+      case "POST":
+        await handlePost(req, res, connection);
+        break;
+      case "PUT":
+        await handlePut(req, res, connection);
+        break;
+      case "DELETE":
+        await handleDelete(req, res, connection);
+        break;
+      default:
+        res.setHeader("Allow", ["GET", "POST", "PUT", "DELETE"]);
+        res.status(405).end(`Method ${method} Not Allowed`);
+    }
+  } catch (error) {
+    console.error("Database connection failed:", error);
+    res.status(500).json({ error: "Database connection failed" });
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
+}
+
+async function handleGet(req, res, connection) {
   const { filter, searchQuery } = req.query;
-  let query = 'SELECT * FROM `tcnmanagepass` WHERE 1=1';
-
+  let query = "SELECT * FROM `tcnmanagepass` WHERE 1=1";
   const queryValues = [];
-  
-  // หากเลือก "All" หรือไม่มี filter, จะไม่กรอง
+
   if (filter && filter !== "All") {
-    query += ` AND FTUsrAgent = ?`; // เปรียบเทียบค่าตรง
+    query += " AND FTUsrAgent = ?";
     queryValues.push(filter);
   }
 
-  // ถ้ามีการค้นหา
   if (searchQuery) {
-    query += ` AND (FTUsrName LIKE ? OR FTUsrPass LIKE ?)`;
-    queryValues.push(`%${searchQuery}%`);
-    queryValues.push(`%${searchQuery}%`);
+    query += " AND (FTUsrName LIKE ? OR FTUsrPass LIKE ?)";
+    queryValues.push(`%${searchQuery}%`, `%${searchQuery}%`);
   }
 
-  connection.query(query, queryValues, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Database query failed' });
-    }
-
-    // ตรวจสอบให้มั่นใจว่ามีการส่งผลลัพธ์กลับ
+  try {
+    const [results] = await connection.execute(query, queryValues);
     if (results.length === 0) {
-      return res.status(200).json({ message: 'No data found' });
+      return res.status(200).json({ message: "No data found" });
     }
-    
     return res.status(200).json(results);
-  });
+  } catch (error) {
+    console.error("Error executing query:", error);
+    return res.status(500).json({ error: "Database query failed" });
+  }
+}
+
+async function handlePost(req, res, connection) {
+  const { FTUsrAgent, FTUsrName, FTUsrPass, FTRemark } = req.body;
+
+  if (!FTUsrAgent || !FTUsrName || !FTUsrPass || !FTRemark) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  try {
+    const [result] = await connection.execute(
+      "INSERT INTO `tcnmanagepass` (FTUsrAgent, FTUsrName, FTUsrPass, FTRemark) VALUES (?, ?, ?, ?)",
+      [FTUsrAgent, FTUsrName, FTUsrPass, FTRemark]
+    );
+    return res
+      .status(201)
+      .json({ message: "Record added", id: result.insertId });
+  } catch (error) {
+    console.error("Error inserting data:", error);
+    return res.status(500).json({ error: "Failed to add record" });
+  }
+}
+
+async function handlePut(req, res, connection) {
+  const { id, FTUsrAgent, FTUsrName, FTUsrPass, FTRemark } = req.body;
+
+  if (!id || !FTUsrAgent || !FTUsrName || !FTUsrPass || !FTRemark) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  try {
+    const [result] = await connection.execute(
+      "UPDATE `tcnmanagepass` SET FTUsrAgent = ?, FTUsrName = ?, FTUsrPass = ?, FTRemark = ? WHERE id = ?",
+      [FTUsrAgent, FTUsrName, FTUsrPass, FTRemark, id]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Record not found" });
+    }
+    return res.status(200).json({ message: "Record updated" });
+  } catch (error) {
+    console.error("Error updating data:", error);
+    return res.status(500).json({ error: "Failed to update record" });
+  }
+}
+
+async function handleDelete(req, res, connection) {
+  const { id } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ error: "ID is required" });
+  }
+
+  try {
+    const [result] = await connection.execute(
+      "DELETE FROM `tcnmanagepass` WHERE id = ?",
+      [id]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Record not found" });
+    }
+    return res.status(200).json({ message: "Record deleted" });
+  } catch (error) {
+    console.error("Error deleting data:", error);
+    return res.status(500).json({ error: "Failed to delete record" });
+  }
 }
