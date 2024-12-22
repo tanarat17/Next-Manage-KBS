@@ -52,17 +52,6 @@ const ModalData = () => {
     const updatedData = data.filter((item) => item.id !== id);
     setData(updatedData);
   };
-
-  // const handleEdit = (row) => {
-  //   setEditingItem({
-  //     id: row.id,
-  //     FTUsrAgent: row.FTUsrAgent,
-  //     FTUsrName: row.FTUsrName,
-  //     FTUsrPass: row.FTUsrPass,
-  //     FTRemark: row.FTRemark,
-  //   });
-  // };
-
   const handleSaveEdit = (updatedItem) => {
     const updatedData = data.map((item) =>
       item.id === updatedItem.id ? updatedItem : item
@@ -86,7 +75,7 @@ const ModalData = () => {
 
   const columns = [
     {
-      name: <span className="font-kanit text-base text-center">ลำดับ</span>,
+      name: <span className="font-kanit text-base flex justify-center">ลำดับ</span>,
       selector: (row, index) => (currentPage - 1) * rowsPerPage + index + 1,
       sortable: true,
       cell: (row, index) => (
@@ -97,22 +86,24 @@ const ModalData = () => {
     },
     {
       name: <span className="font-kanit text-base">รหัสตัวแทน</span>,
-      selector: (row) => row.FTUsrAgent,
+      selector: (row) => <span className="font-kanit">{row.FTUsrAgent}</span>,
+
       sortable: true,
     },
     {
       name: <span className="font-kanit text-base">ชื่อผู้ใช้</span>,
-      selector: (row) => row.FTUsrName,
+      selector: (row) => <span className="font-kanit">{row.FTUsrName}</span>,
       sortable: true,
-    },
+    },    
     {
       name: <span className="font-kanit text-base">รหัสผ่าน</span>,
-      selector: (row) => row.FTUsrPass,
+      selector: (row) => <span className="font-kanit">{row.FTUsrPass}</span>,
+
       sortable: true,
     },
     {
       name: <span className="font-kanit text-base">หมายเหตุ</span>,
-      selector: (row) => row.FTRemark,
+      selector: (row) => <span className="font-kanit">{row.FTRemark}</span>,
       sortable: true,
     },
     {
@@ -144,9 +135,9 @@ const ModalData = () => {
 
   return (
     <>
-      <div className="mockup-browser bg-[#F9FCFB] border w-full max-w-4xl mx-auto my-8 h-[850px]">
+      <div className="mockup-browser bg-[#FFA403] border w-full max-w-4xl mx-auto my-8 h-[850px]">
         <div className="mockup-browser-toolbar">
-          <div className="input font-kanit font-bold ">ข้อมูลรหัสผ่าน</div>
+          <div className="input font-kanit font-bold text-white">ข้อมูลรหัสผ่าน</div>
         </div>
         <div className="bg-base-100 flex justify-center">
           <div className="container mx-auto p-6">
@@ -154,7 +145,7 @@ const ModalData = () => {
               {!editingItem && (
                 <div className="flex flex-wrap items-center space-y-2 md:space-y-0 md:space-x-2">
                   <select
-                    className="w-full md:w-32 h-10 px-3 py-2 text-sm border-2 border-black focus:outline-none bg-white font-kanit font-semibold rounded-lg"
+                    className="w-full md:w-32 h-10 px-3 py-2 text-sm border-2 border-black focus:outline-none bg-white font-kanit text-black font-semibold rounded-lg"
                     value={filterOption}
                     onChange={(e) => setFilterOption(e.target.value)}
                   >
@@ -165,11 +156,11 @@ const ModalData = () => {
                   </select>
 
                   <input
+                    className="w-full md:w-64 h-10 px-3 py-2 text-sm border-2 border-black focus:outline-none bg-white font-kanit text-black font-semibold rounded-lg"
                     type="text"
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    placeholder="Search..."
-                    className="w-full md:w-64 h-10 px-3 py-2 text-sm border-2 border-black focus:outline-none bg-white font-kanit font-semibold rounded-lg"
+                    placeholder="ค้นหา..."
                   />
                 </div>
               )}
@@ -208,15 +199,15 @@ const ModalData = () => {
 
             {!editingItem && (
               <div>
-                <div className="flex justify-center mt-4">
+                <div className="flex justify-right mt-4">
                   {Array.from({ length: totalPages }, (_, index) => (
                     <button
                       key={index}
                       onClick={() => handlePageChange(index + 1)}
                       className={`px-4 py-1 mx-1 rounded ${
                         currentPage === index + 1
-                          ? "bg-black text-white"
-                          : "bg-gray-200"
+                          ? "bg-white text-black"
+                          : "bg-black-200"
                       }`}
                     >
                       {index + 1}

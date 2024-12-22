@@ -1,5 +1,4 @@
-// pages/api/manage/listpass-api.js
-
+// pages\api\manage\listpass-api.js
 import mysql from "mysql2/promise";
 
 const dbConfig = {
@@ -14,29 +13,34 @@ export default async function handler(req, res) {
 
   try {
     connection = await mysql.createConnection(dbConfig);
-
     const { method } = req;
 
+    console.log('Request query:', req.query); // Log the query parameters
+
     switch (method) {
-      case "GET":
-        await handleGet(req, res, connection);
+      case 'GET':
+        if (req.query.id) {
+          await handleGetById(req, res, connection); // Fetch by ID
+        } else {
+          await handleGet(req, res, connection); // Regular GET
+        }
         break;
-      case "POST":
+      case 'POST':
         await handlePost(req, res, connection);
         break;
-      case "PUT":
+      case 'PUT':
         await handlePut(req, res, connection);
         break;
-      case "DELETE":
+      case 'DELETE':
         await handleDelete(req, res, connection);
         break;
       default:
-        res.setHeader("Allow", ["GET", "POST", "PUT", "DELETE"]);
+        res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (error) {
-    console.error("Database connection failed:", error);
-    res.status(500).json({ error: "Database connection failed" });
+    console.error('Database connection failed:', error);
+    res.status(500).json({ error: 'Database connection failed' });
   } finally {
     if (connection) {
       await connection.end();
@@ -44,6 +48,8 @@ export default async function handler(req, res) {
   }
 }
 
+
+// Existing GET handler for all records
 async function handleGet(req, res, connection) {
   const { filter, searchQuery } = req.query;
   let query = "SELECT * FROM `tcnmanagepass` WHERE 1=1";
@@ -71,6 +77,25 @@ async function handleGet(req, res, connection) {
   }
 }
 
+// New GET handler to fetch data by ID
+async function handleGetById(req, res, connection) {
+  const { id } = req.query;
+  try {
+    const [rows] = await connection.execute('SELECT * FROM tcnmanagepass WHERE id = ?', [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(rows[0]);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Error fetching data' });
+  }
+}
+
+
+// Existing POST handler
 async function handlePost(req, res, connection) {
   const { FTUsrAgent, FTUsrName, FTUsrPass, FTRemark } = req.body;
 
@@ -92,6 +117,7 @@ async function handlePost(req, res, connection) {
   }
 }
 
+// Existing PUT handler
 async function handlePut(req, res, connection) {
   const { id, FTUsrAgent, FTUsrName, FTUsrPass, FTRemark } = req.body;
 
@@ -114,6 +140,7 @@ async function handlePut(req, res, connection) {
   }
 }
 
+// Existing DELETE handler
 async function handleDelete(req, res, connection) {
   const { id } = req.body;
 

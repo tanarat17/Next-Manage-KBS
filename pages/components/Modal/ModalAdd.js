@@ -58,10 +58,11 @@ function ModalAdd() {
       //   handleBack();
 
       // Redirect after closing the modal
-      router.push("/components/Modal/ModalData");
+      router.push("/components/Modal/ModalData"); // นำทางไปยังหน้าที่ต้องการ
     } catch (error) {
       console.log(error);
     }
+    handleBack()
   };
 
   return (
