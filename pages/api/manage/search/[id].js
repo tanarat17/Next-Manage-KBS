@@ -1,4 +1,4 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+// next-js-bet/pages/api/manage/search/[id].js
 
 // Create the connection to database
 // Get the client
@@ -11,9 +11,9 @@ const connection = mysql.createConnection({
   database: process.env.DB_DATABASE,
 });
 export default function handler(req, res) {
-
+  const { id } = req.query
 connection.query(
-  'SELECT * FROM `tcnmanagepass`',
+  'SELECT * FROM `tcnmanagepass` WHERE `id` = ?', [id],
   function (err, results, fields) {
     console.log(results); 
     console.log(fields); 
