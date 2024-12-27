@@ -3,7 +3,10 @@ import DataTable from "react-data-table-component";
 import { FiSearch, FiArrowLeft, FiEdit, FiTrash, FiPlus } from "react-icons/fi";
 import ModalAdd from "./ModalAdd";
 import ModalEdit from "./ModalEdit";
+//import ModalRead from "./ModalRead";
 import { useRouter } from "next/router";
+import Swal from 'sweetalert2';
+
 
 const ModalData = () => {
   const [data, setData] = useState([]);
@@ -48,10 +51,42 @@ const ModalData = () => {
   const handleEdit = (row) => {
     router.push(`/components/Modal/ModalEdit/${row.id}`);
   };
-  const handleDelete = (id) => {
-    const updatedData = data.filter((item) => item.id !== id);
-    setData(updatedData);
+  const handleDetail = (row) => {
+    router.push(`/components/Modal/ModalRead/${row.id}`);
   };
+  const handleDelete = async (id) => {
+    try {
+      // แสดง SweetAlert เพื่อยืนยันการลบ
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+      });
+  
+      if (result.isConfirmed) {
+        // เรียก API สำหรับลบข้อมูล
+        const res = await fetch(`http://localhost:3000/api/manage/listpass-api?id=${id}`, 
+        {
+          method: 'DELETE',
+        });
+        if (!res.ok) {
+          throw new Error('Failed to delete');
+        }
+        const updatedData = data.filter((item) => item.id !== id);
+        setData(updatedData);  // อัพเดตสถานะ UI
+        Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+      } else {
+        Swal.fire('Cancelled', 'Your file is safe', 'error');
+      }
+    } catch (error) {
+      console.error('Error deleting data:', error);
+    }
+  };
+
   const handleSaveEdit = (updatedItem) => {
     const updatedData = data.map((item) =>
       item.id === updatedItem.id ? updatedItem : item
@@ -101,11 +136,22 @@ const ModalData = () => {
 
       sortable: true,
     },
+
     {
-      name: <span className="font-kanit text-base">หมายเหตุ</span>,
-      selector: (row) => <span className="font-kanit">{row.FTRemark}</span>,
-      sortable: true,
+      name: <span className="font-kanit text-base"></span>,
+      cell: (row) => (
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleDetail(row)}
+            className="bg-red-500 text-white p-2 rounded font-kanit font-semibold"
+          >
+            รายละเอียด
+          </button>
+        </div>
+      ),
     },
+  
+    
     {
       name: "",
       cell: (row) => (
@@ -135,7 +181,7 @@ const ModalData = () => {
 
   return (
     <>
-      <div className="mockup-browser bg-[#FFA403] border w-full max-w-4xl mx-auto my-8 h-[850px]">
+      <div className="mockup-browser bg-[#FFA403] border-2 w-full max-w-4xl mx-auto my-8 h-[850px]">
         <div className="mockup-browser-toolbar">
           <div className="input font-kanit font-bold text-white">ข้อมูลรหัสผ่าน</div>
         </div>
@@ -218,7 +264,7 @@ const ModalData = () => {
                 <div className="flex justify-end gap-2 mt-4">
                   <button
                     onClick={handleAdd}
-                    className="bg-blue-500 text-white px-4 py-2 rounded font-kanit font-semibold flex items-center"
+                    className="bg-[#FFA403] text-black px-4 py-2 rounded font-kanit font-semibold flex items-center"
                   >
                     <FiPlus className="mr-2" />{" "}
                     {/* ใช้ไอคอน FiPlus จาก react-icons */}

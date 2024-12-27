@@ -4,25 +4,29 @@ import { IoCaretBack } from "react-icons/io5";
 import DataTable from "react-data-table-component";
 import { useRouter } from "next/router";
 import { FiSave, FiArrowLeft } from "react-icons/fi"; // นำเข้าไอคอน FiSave
+import Swal from "sweetalert2";
 
 function ModalAdd() {
   const [FTUsrAgent, setFTUsrAgent] = useState("");
   const [FTUsrName, setFTUsrName] = useState("");
   const [FTUsrPass, setFTUsrPass] = useState("");
   const [FTRemark, setFTRemark] = useState("");
+  const [FTUrlObj, setFTUrlObj] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(true);
   const router = useRouter();
 
   const handleBack = () => {
-    router.push("/components/Modal/ModalData"); // นำทางไปยังหน้าที่ต้องการ
+    router.push("/components/Modal/ModalData");
   };
 
-  const addUser = async () => {
+  const addUser = async (event) => {
+
+    event.preventDefault(); // ป้องกันการ reload หน้า
     if (!FTUsrAgent || !FTUsrName || !FTUsrPass || !FTRemark) {
       alert("Please complete all inputs.");
       return;
     }
-
+  
     const postData = {
       method: "POST",
       headers: {
@@ -33,41 +37,47 @@ function ModalAdd() {
         FTUsrName,
         FTUsrPass,
         FTRemark,
+        FTUrlObj,
       }),
     };
-
+  
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/manage/listpass-api`,
-        postData
-      );
+      const res = await fetch(`http://localhost:3000/api/manage/listpass-api`, postData);
       const response = await res.json();
-      console.log(response);
-
-      if (response?.response?.message !== "success") return;
-      alert("เพิ่มข้อมูลสำเร็จ");
-      // Show SweetAlert2 notification
-      await Swal.fire({
-        title: "สำเร็จ!",
-        text: "เพิ่มข้อมูลสำเร็จ",
-        icon: "success",
-        confirmButtonText: "ตกลง",
-      });
-
-      // Close modal after the alert
-      //   handleBack();
-
-      // Redirect after closing the modal
-      router.push("/components/Modal/ModalData"); // นำทางไปยังหน้าที่ต้องการ
-    } catch (error) {
-      console.log(error);
-    }
-    handleBack()
+      console.log("Response from API Page Add. :", response);
+    
+      if (response?.message == 'success') {
+        await Swal.fire({
+          title: "Success",
+          text: "The data has been successfully added.",
+          icon: "success",
+          confirmButtonText: "Confirm",
+        });
+      
+        router.push("/components/Modal/ModalData");
+      } else {
+        Swal.fire({
+          title: "Failure",
+          text: "There was an issue adding the data.",
+          icon: "error",
+          confirmButtonText: "Retry",
+        });
+      }
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          title: "Error",
+          text: "Unable to establish a connection with the server.",
+          icon: "error",
+          confirmButtonText: "Retry",
+        });
+      }
+      
   };
-
+  
   return (
     <>
-      <div className="mockup-browser border bg-[#FFA403] w-full max-w-4xl mx-auto my-8 h-[610]">
+      <div className="mockup-browser border-2 bg-[#FFA403] w-full max-w-4xl mx-auto my-8 h-[695]">
         <div className="mockup-browser-toolbar bg-[#FDA403]">
           <div className="input font-kanit font-bold">เพิ่มรหัสผ่าน</div>
         </div>
@@ -77,7 +87,7 @@ function ModalAdd() {
               {/* Input Fields */}
               <div className="mb-4 mt-10">
                 <label className="block text-sm font-kanit font-semibold">
-                  เว็บไซต์
+                  ตัวแทน
                 </label>
                 <select
                   onChange={(e) => setFTUsrAgent(e.target.value)}
@@ -111,6 +121,18 @@ function ModalAdd() {
                   className="w-full px-3 py-2 border-2 border-black bg-white rounded text-black"
                 />
               </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-kanit font-semibold">
+                  ปลายทาง (Url)
+                </label>
+                <input
+                  onChange={(e) => setFTUrlObj(e.target.value)}
+                  type="text"
+                  className="w-full px-3 py-2 border-2 border-black bg-white rounded text-black"
+                />
+              </div>
+
 
               <div className="mb-4">
                 <label className="block text-sm font-kanit font-semibold">

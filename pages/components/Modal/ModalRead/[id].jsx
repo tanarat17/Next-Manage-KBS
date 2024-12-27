@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FiSave, FiArrowLeft } from "react-icons/fi";
 import Swal from "sweetalert2";
 
-const ModalEdit = () => {
+const ModalRead = () => {
   const router = useRouter();
   const { id } = router.query;
   const [FTUsrAgent, setFTUsrAgent] = useState("");
@@ -46,66 +46,66 @@ const ModalEdit = () => {
   }, [id]);
 
   // ฟังก์ชันสำหรับอัพเดตข้อมูลผู้ใช้
-  const updateUser = async (event) => {
-    event.preventDefault(); // ป้องกันการรีโหลดหน้าเมื่อกด Submit
-    if (!FTUsrAgent || !FTUsrName || !FTUsrPass || !FTRemark) {
-      alert("Please complete all inputs.");
-      return;
-    }
+  // const updateUser = async (event) => {
+  //   event.preventDefault(); // ป้องกันการรีโหลดหน้าเมื่อกด Submit
+  //   if (!FTUsrAgent || !FTUsrName || !FTUsrPass || !FTRemark) {
+  //     alert("Please complete all inputs.");
+  //     return;
+  //   }
 
-    const postData = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        FTUsrAgent,
-        FTUsrName,
-        FTUsrPass,
-        FTRemark,
-        FTUrlObj,
-      }),
-    };
+  //   const postData = {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       id,
+  //       FTUsrAgent,
+  //       FTUsrName,
+  //       FTUsrPass,
+  //       FTRemark,
+  //       FTUrlObj,
+  //     }),
+  //   };
 
-    try {
-      const res = await fetch(`http://localhost:3000/api/manage/listpass-api`, postData);
-      const response = await res.json();
-      if (response?.message == 'success') {
-        await Swal.fire({
-          title: "Success",
-          text: "Data updated successfully.",
-          icon: "success",
-          confirmButtonText: "Done",
-        });
-        router.push("/components/Modal/ModalData");
-      } else {
-        Swal.fire({
-          title: "Fail",
-          text: "Failed to update data.",
-          icon: "error",
-          confirmButtonText: "Try Again",
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      Swal.fire({
-        title: "Error!",
-        text: "Unable to connect to the server.",
-        icon: "error",
-        confirmButtonText: "Try Again",
-      });
-    }
-  };
+  //   try {
+  //     const res = await fetch(`http://localhost:3000/api/manage/listpass-api`, postData);
+  //     const response = await res.json();
+  //     if (response?.message == 'success') {
+  //       await Swal.fire({
+  //         title: "Success",
+  //         text: "Data updated successfully.",
+  //         icon: "success",
+  //         confirmButtonText: "Done",
+  //       });
+  //       router.push("/components/Modal/ModalData");
+  //     } else {
+  //       Swal.fire({
+  //         title: "Fail",
+  //         text: "Failed to update data.",
+  //         icon: "error",
+  //         confirmButtonText: "Try Again",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     Swal.fire({
+  //       title: "Error!",
+  //       text: "Unable to connect to the server.",
+  //       icon: "error",
+  //       confirmButtonText: "Try Again",
+  //     });
+  //   }
+  // };
 
   return (
-    <div className="mockup-browser border-2 bg-[#FFA403] w-full max-w-4xl mx-auto my-8 h-[710]">
+    <div className="mockup-browser border-2 bg-[#FFA403] w-full max-w-4xl mx-auto my-8 h-[610]">
       <div className="mockup-browser-toolbar bg-[#FDA403]">
-        <div className="input font-kanit text-white font-bold">แก้ไขรหัสผ่าน</div>
+        <div className="input font-kanit text-white font-bold">ตรวจสอบข้อมูล</div>
       </div>
       <div className="bg-base-100 flex justify-center">
         <div className="flex flex-col items-center w-full max-w-[300] lg:max-w-lg mx-auto mb-4">
-          <form onSubmit={updateUser} className="w-full">
+         
             {/* Input Fields */}
             <div className="mb-4 mt-10">
               <label className="input input-bordered flex items-center gap-2 bg-gray-400 text-black font-semibold">
@@ -123,6 +123,7 @@ const ModalEdit = () => {
                 onChange={(e) => setFTUsrName(e.target.value)}
                 type="text"
                 className="w-full px-3 py-2 border-2 border-black bg-white rounded text-black font-kanit font-md"
+                readOnly 
               />
             </div>
 
@@ -135,6 +136,7 @@ const ModalEdit = () => {
                 onChange={(e) => setFTUsrPass(e.target.value)}
                 type="text"
                 className="w-full px-3 py-2 border-2 border-black bg-white rounded text-black font-kanit font-md"
+                readOnly 
               />
             </div>
 
@@ -160,6 +162,7 @@ const ModalEdit = () => {
                 onChange={(e) => setFTRemark(e.target.value)}
                 className="w-full px-3 py-2 border-2 border-black bg-white rounded text-black font-kanit font-md"
                 rows="4"
+                readOnly
               />
             </div>
 
@@ -172,19 +175,19 @@ const ModalEdit = () => {
                 <FiArrowLeft className="mr-2" />
                 กลับ
               </button>
-              <button
+              {/* <button
                 type="submit"
                 className="bg-green-700 text-white px-4 py-2 rounded font-kanit font-semibold flex items-center justify-center"
               >
                 <FiSave className="mr-2" />
                 บันทึกข้อมูล
-              </button>
+              </button> */}
             </div>
-          </form>
+         
         </div>
       </div>
     </div>
   );
 };
 
-export default ModalEdit;
+export default ModalRead;

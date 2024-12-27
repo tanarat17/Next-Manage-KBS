@@ -15,39 +15,38 @@ export default async function handler(req, res) {
     connection = await mysql.createConnection(dbConfig);
     const { method } = req;
 
-    console.log('Request query:', req.query); // Log the query parameters
+    console.log("Request query:", req.query); // Log the query parameters
 
     switch (method) {
-      case 'GET':
+      case "GET":
         if (req.query.id) {
           await handleGetById(req, res, connection); // Fetch by ID
         } else {
           await handleGet(req, res, connection); // Regular GET
         }
         break;
-      case 'POST':
+      case "POST":
         await handlePost(req, res, connection);
         break;
-      case 'PUT':
+      case "PUT":
         await handlePut(req, res, connection);
         break;
-      case 'DELETE':
+      case "DELETE":
         await handleDelete(req, res, connection);
         break;
       default:
-        res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
+        res.setHeader("Allow", ["GET", "POST", "PUT", "DELETE"]);
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (error) {
-    console.error('Database connection failed:', error);
-    res.status(500).json({ error: 'Database connection failed' });
+    console.error("Database connection failed:", error);
+    res.status(500).json({ error: "Database connection failed" });
   } finally {
     if (connection) {
       await connection.end();
     }
   }
 }
-
 
 // Existing GET handler for all records
 async function handleGet(req, res, connection) {
@@ -81,19 +80,21 @@ async function handleGet(req, res, connection) {
 async function handleGetById(req, res, connection) {
   const { id } = req.query;
   try {
-    const [rows] = await connection.execute('SELECT * FROM tcnmanagepass WHERE id = ?', [id]);
+    const [rows] = await connection.execute(
+      "SELECT * FROM tcnmanagepass WHERE id = ?",
+      [id]
+    );
 
     if (rows.length === 0) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.status(200).json(rows[0]);
   } catch (error) {
-    console.error('Error fetching data:', error);
-    res.status(500).json({ error: 'Error fetching data' });
+    console.error("Error fetching data:", error);
+    res.status(500).json({ error: "Error fetching data" });
   }
 }
-
 
 // Existing POST handler
 async function handlePost(req, res, connection) {
@@ -108,9 +109,7 @@ async function handlePost(req, res, connection) {
       "INSERT INTO `tcnmanagepass` (FTUsrAgent, FTUsrName, FTUsrPass, FTRemark) VALUES (?, ?, ?, ?)",
       [FTUsrAgent, FTUsrName, FTUsrPass, FTRemark]
     );
-    return res
-      .status(201)
-      .json({ message: "Record added", id: result.insertId });
+    return res.status(201).json({ message: "success", id: result.insertId });
   } catch (error) {
     console.error("Error inserting data:", error);
     return res.status(500).json({ error: "Failed to add record" });
@@ -120,11 +119,9 @@ async function handlePost(req, res, connection) {
 // Existing PUT handler
 async function handlePut(req, res, connection) {
   const { id, FTUsrAgent, FTUsrName, FTUsrPass, FTRemark } = req.body;
-
   if (!id || !FTUsrAgent || !FTUsrName || !FTUsrPass || !FTRemark) {
     return res.status(400).json({ error: "All fields are required" });
   }
-
   try {
     const [result] = await connection.execute(
       "UPDATE `tcnmanagepass` SET FTUsrAgent = ?, FTUsrName = ?, FTUsrPass = ?, FTRemark = ? WHERE id = ?",
@@ -133,21 +130,22 @@ async function handlePut(req, res, connection) {
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Record not found" });
     }
-    return res.status(200).json({ message: "Record updated" });
+    return res.status(200).json({ message: "success" });
   } catch (error) {
-    console.error("Error updating data:", error);
-    return res.status(500).json({ error: "Failed to update record" });
+    console.error("Error updating data:", error.message);
+    return res
+      .status(500)
+      .json({ error: "Failed to update record", details: error.message });
   }
 }
 
 // Existing DELETE handler
 async function handleDelete(req, res, connection) {
-  const { id } = req.body;
+  const { id } = req.query; 
 
   if (!id) {
     return res.status(400).json({ error: "ID is required" });
   }
-
   try {
     const [result] = await connection.execute(
       "DELETE FROM `tcnmanagepass` WHERE id = ?",
@@ -156,7 +154,7 @@ async function handleDelete(req, res, connection) {
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Record not found" });
     }
-    return res.status(200).json({ message: "Record deleted" });
+    return res.status(200).json({ message: "success" });
   } catch (error) {
     console.error("Error deleting data:", error);
     return res.status(500).json({ error: "Failed to delete record" });

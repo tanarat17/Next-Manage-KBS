@@ -14,4 +14,22 @@
 }
 
 
+.swal2-title-custom {
+  font-family: 'Th Sarabun PSK', sans-serif;
+  font-size: 32px; /* ขนาดฟอนต์สำหรับ title */
+  font-weight: bold;
+}
+
+.swal2-text-custom {
+  font-family: 'Th Sarabun PSK', sans-serif;
+  font-size: 24px; /* ขนาดฟอนต์สำหรับข้อความ */
+}
+
+.swal2-confirm-button-custom {
+  font-family: 'Th Sarabun PSK', sans-serif;
+  font-size: 20px; /* ขนาดฟอนต์สำหรับปุ่ม */
+}
+
+
+
 
