@@ -9,7 +9,12 @@ const ModalEdit = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/manage/listpass-id-api/${id}`);
+        // const res = await fetch(`http://localhost:3000/api/manage/listpass-id-api/${id}`);
+        // const res = await fetch(`{process.env.NEXT_PUBLIC_API_URL}/${id}`);
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}`);
+
+
         if (!res.ok) {
           throw new Error('Failed to fetch user data');
         }

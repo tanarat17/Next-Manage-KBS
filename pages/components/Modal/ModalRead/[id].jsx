@@ -32,7 +32,9 @@ const ModalRead = () => {
     const fetchUserData = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/api/manage/listpass-api?id=${id}`
+          // `http://localhost:3000/api/manage/listpass-api?id=${id}`
+          `${process.env.NEXT_PUBLIC_API_URL}?id=${id}`
+
         );
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
