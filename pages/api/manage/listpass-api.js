@@ -1,12 +1,27 @@
-// pages\api\manage\listpass-api.js
+// pages/api/manage/listpass-api.js
 import mysql from "mysql2/promise";
+import dotenv from "dotenv";
+dotenv.config();
 
 const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  password: process.env.DB_PASS,
   database: process.env.DB_DATABASE,
+  port: process.env.DB_PORT,
 };
+
+const testDbConnection = async () => {
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+    console.log("Database connection successful!");
+    await connection.end();
+  } catch (error) {
+    console.error("Database connection failed:", error);  // Log the full error for debugging
+  }
+};
+
+testDbConnection();
 
 export default async function handler(req, res) {
   let connection;
@@ -98,16 +113,16 @@ async function handleGetById(req, res, connection) {
 
 // Existing POST handler
 async function handlePost(req, res, connection) {
-  const { FTUsrAgent, FTUsrName, FTUsrPass, FTRemark } = req.body;
+  const { FTUsrAgent, FTUsrName, FTUsrPass, FTUrlObj,FTRemark } = req.body;
 
-  if (!FTUsrAgent || !FTUsrName || !FTUsrPass || !FTRemark) {
+  if (!FTUsrAgent || !FTUsrName || !FTUsrPass || !FTUrlObj || !FTRemark) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
   try {
     const [result] = await connection.execute(
-      "INSERT INTO `tcnmanagepass` (FTUsrAgent, FTUsrName, FTUsrPass, FTRemark) VALUES (?, ?, ?, ?)",
-      [FTUsrAgent, FTUsrName, FTUsrPass, FTRemark]
+      "INSERT INTO `tcnmanagepass` (FTUsrAgent, FTUsrName, FTUsrPass, FTUrlObj ,FTRemark) VALUES (?, ?, ?, ? ,?)",
+      [FTUsrAgent, FTUsrName, FTUsrPass, FTUrlObj ,FTRemark]
     );
     return res.status(201).json({ message: "success", id: result.insertId });
   } catch (error) {
@@ -118,14 +133,14 @@ async function handlePost(req, res, connection) {
 
 // Existing PUT handler
 async function handlePut(req, res, connection) {
-  const { id, FTUsrAgent, FTUsrName, FTUsrPass, FTRemark } = req.body;
-  if (!id || !FTUsrAgent || !FTUsrName || !FTUsrPass || !FTRemark) {
+  const { id, FTUsrAgent, FTUsrName, FTUsrPass, FTUrlObj ,FTRemark } = req.body;
+  if (!id || !FTUsrAgent || !FTUsrName || !FTUsrPass || !FTUrlObj || !FTRemark) {
     return res.status(400).json({ error: "All fields are required" });
   }
   try {
     const [result] = await connection.execute(
-      "UPDATE `tcnmanagepass` SET FTUsrAgent = ?, FTUsrName = ?, FTUsrPass = ?, FTRemark = ? WHERE id = ?",
-      [FTUsrAgent, FTUsrName, FTUsrPass, FTRemark, id]
+      "UPDATE `tcnmanagepass` SET FTUsrAgent = ?, FTUsrName = ?, FTUsrPass = ?, FTUrlObj = ? , FTRemark = ? WHERE id = ?",
+      [FTUsrAgent, FTUsrName, FTUsrPass, FTUrlObj,FTRemark, id]
     );
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Record not found" });
@@ -133,9 +148,7 @@ async function handlePut(req, res, connection) {
     return res.status(200).json({ message: "success" });
   } catch (error) {
     console.error("Error updating data:", error.message);
-    return res
-      .status(500)
-      .json({ error: "Failed to update record", details: error.message });
+    return res.status(500).json({ error: "Failed to update record", details: error.message });
   }
 }
 

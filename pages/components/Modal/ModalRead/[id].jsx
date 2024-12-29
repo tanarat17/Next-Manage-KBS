@@ -16,6 +16,16 @@ const ModalRead = () => {
     router.push("/components/Modal/ModalData");
   };
 
+
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text)
+      .catch((error) => {
+        console.error("ไม่สามารถคัดลอกได้:", error);
+      });
+  };
+  
+  
+
   // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้จาก API
   useEffect(() => {
     if (!id) return;
@@ -115,57 +125,47 @@ const ModalRead = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-kanit text-white font-semibold">
-                ชื่อผู้ใช้
+              <label className="input input-bordered flex items-center gap-2 bg-gray-50 text-black font-semibold">
+                <input type="text" className="grow" value={FTUsrName} readOnly />
+                <span
+                  onClick={() => handleCopy(FTUsrName)}
+                  className="badge badge-warning cursor-pointer w-24 h-6 text-center"
+                >
+                  ชื่อผู้ใช้
+                </span>
               </label>
-              <input
-                value={FTUsrName}
-                onChange={(e) => setFTUsrName(e.target.value)}
-                type="text"
-                className="w-full px-3 py-2 border-2 border-black bg-white rounded text-black font-kanit font-md"
-                readOnly 
-              />
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-kanit text-white font-semibold">
-                รหัสผ่าน
+              <label className="input input-bordered flex items-center gap-2 bg-gray-50 text-black font-semibold">
+                <input type="text" className="grow" value={FTUsrPass} readOnly />
+                <span
+                  onClick={() => handleCopy(FTUsrPass)}
+                  className="badge badge-warning cursor-pointer w-24 h-6 text-center"
+                >
+                  รหัสผ่าน
+                </span>
               </label>
-              <input
-                value={FTUsrPass}
-                onChange={(e) => setFTUsrPass(e.target.value)}
-                type="text"
-                className="w-full px-3 py-2 border-2 border-black bg-white rounded text-black font-kanit font-md"
-                readOnly 
-              />
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-kanit text-white font-semibold">
-                ปลายทาง (Url)
+              <label className="input input-bordered flex items-center gap-2 bg-gray-50 text-black font-semibold">
+                <input type="text" className="grow" value={FTUrlObj} readOnly />
+                <span
+                  onClick={() => handleCopy(FTUrlObj)}
+                  className="badge badge-warning cursor-pointer w-24 h-6 text-center"
+                >
+                  URL
+                </span>
               </label>
-              <textarea
-                value={FTUrlObj}
-                onChange={(e) => setFTUrlObj(e.target.value)}
-                className="w-full px-3 py-2 border-2 border-black bg-white rounded text-black font-kanit font-md"
-                rows="4"
-              />
             </div>
 
-            
-            <div className="mb-4">
-              <label className="block text-sm font-kanit text-white font-semibold">
-                หมายเหตุ
+            <div className="mb-4 mb-10">
+            <label className="input input-bordered flex items-center gap-2 bg-gray-50 text-black font-semibold">
+                <input type="text" className="grow" value={FTRemark} readOnly />
+                <span className="badge badge-warning w-24 h-6">หมายเหตุ</span>
               </label>
-              <textarea
-                value={FTRemark}
-                onChange={(e) => setFTRemark(e.target.value)}
-                className="w-full px-3 py-2 border-2 border-black bg-white rounded text-black font-kanit font-md"
-                rows="4"
-                readOnly
-              />
             </div>
-
             <div className="flex flex-col gap-4 md:flex-row md:justify-between my-4">
               <button
                 type="button"

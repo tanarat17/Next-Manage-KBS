@@ -143,7 +143,7 @@ const ModalData = () => {
         <div className="flex gap-2">
           <button
             onClick={() => handleDetail(row)}
-            className="bg-red-500 text-white p-2 rounded font-kanit font-semibold"
+            className="bg-green-700 text-white p-2 rounded font-kanit font-semibold"
           >
             รายละเอียด
           </button>
