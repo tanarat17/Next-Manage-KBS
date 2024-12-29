@@ -69,7 +69,9 @@ const ModalEdit = () => {
     };
 
     try {
-      const res = await fetch(`http://localhost:3000/api/manage/listpass-api`, postData);
+      // const res = await fetch(`http://localhost:3000/api/manage/listpass-api`, postData);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`, postData);
+
       const response = await res.json();
       if (response?.message == 'success') {
         await Swal.fire({
