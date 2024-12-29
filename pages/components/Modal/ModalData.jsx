@@ -16,32 +16,13 @@ const ModalData = () => {
   const rowsPerPage = 10;
   const [filterOption, setFilterOption] = useState("All");
 
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       // `http://localhost:3000/api/manage/listpass-api?filter=${filterOption}&searchQuery=${searchQuery}`
-  //       `${process.env.NEXT_PUBLIC_API_URL}?filter=${filterOption}&searchQuery=${searchQuery}`
-
-  //     );
-  //     const result = await response.json();
-  //     if (Array.isArray(result)) {
-  //       setData(result);
-  //     } else {
-  //       console.log("Data is not an array", result);
-  //       setData([]);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //     setData([]);
-  //   }
-  // };
-
-
   const fetchData = async () => {
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}?filter=${filterOption}&searchQuery=${searchQuery}`;
-      console.log('Fetching from: ', apiUrl); // ตรวจสอบว่า URL ถูกต้อง
-      const response = await fetch(apiUrl);
+      const response = await fetch(
+        // `http://localhost:3000/api/manage/listpass-api?filter=${filterOption}&searchQuery=${searchQuery}`
+        `${process.env.NEXT_PUBLIC_API_URL}?filter=${filterOption}&searchQuery=${searchQuery}`
+
+      );
       const result = await response.json();
       if (Array.isArray(result)) {
         setData(result);
@@ -54,9 +35,29 @@ const ModalData = () => {
       setData([]);
     }
   };
+
+
+  // const fetchData = async () => {
+  //   try {
+  //     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}?filter=${filterOption}&searchQuery=${searchQuery}`;
+  //     console.log('Fetching from: ', apiUrl); // ตรวจสอบว่า URL ถูกต้อง
+  //     const response = await fetch(apiUrl);
+  //     const result = await response.json();
+  //     if (Array.isArray(result)) {
+  //       setData(result);
+  //     } else {
+  //       console.log("Data is not an array", result);
+  //       setData([]);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     setData([]);
+  //   }
+  // };
   
 
-  
+
+
   useEffect(() => {
     fetchData();
   }, [filterOption, searchQuery]);
