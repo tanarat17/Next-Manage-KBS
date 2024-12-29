@@ -39,7 +39,7 @@ const ModalData = () => {
 
   // const fetchData = async () => {
   //   try {
-  //     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}?filter=${filterOption}&searchQuery=${searchQuery}`;
+  //     `${process.env.NEXT_PUBLIC_API_URL}?filter=${filterOption}&searchQuery=${searchQuery}`;
   //     console.log('Fetching from: ', apiUrl); // ตรวจสอบว่า URL ถูกต้อง
   //     const response = await fetch(apiUrl);
   //     const result = await response.json();
