@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import { FiSearch, FiArrowLeft, FiEdit, FiTrash, FiPlus } from "react-icons/fi";
+import { FiSearch, FiArrowLeft, FiEdit, FiTrash, FiPlus , FiHome } from "react-icons/fi";
 import ModalAdd from "./ModalAdd";
 import ModalEdit from "./ModalEdit";
 //import ModalRead from "./ModalRead";
@@ -184,9 +184,15 @@ const ModalData = () => {
   return (
     <>
       <div className="mockup-browser bg-[#FFA403] border-2 w-full max-w-4xl mx-auto my-8 h-[850px]">
-        <div className="mockup-browser-toolbar">
-          <div className="input font-kanit font-bold text-white">ข้อมูลรหัสผ่าน</div>
-        </div>
+      <div className="mockup-browser-toolbar flex justify-between items-center px-4 py-2">
+            <div className="input font-kanit font-bold text-white">ข้อมูลรหัสผ่าน</div>
+            <button
+            className="btn btn-info"
+            onClick={() => router.push(`/`)}
+          >
+            <FiHome className="w-5 h-5" />
+          </button>  
+      </div>
         <div className="bg-base-100 flex justify-center">
           <div className="container mx-auto p-6">
             <div className="flex items-center justify-between mb-4">

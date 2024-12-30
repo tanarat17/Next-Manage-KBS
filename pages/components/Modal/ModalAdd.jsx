@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IoCaretBack } from "react-icons/io5";
 import DataTable from "react-data-table-component";
 import { useRouter } from "next/router";
-import { FiSave, FiArrowLeft } from "react-icons/fi"; // นำเข้าไอคอน FiSave
+import { FiSave, FiArrowLeft, FiHome } from "react-icons/fi"; // นำเข้าไอคอน FiSave
 import Swal from "sweetalert2";
 
 function ModalAdd() {
@@ -20,13 +20,12 @@ function ModalAdd() {
   };
 
   const addUser = async (event) => {
-
     event.preventDefault(); // ป้องกันการ reload หน้า
     if (!FTUsrAgent || !FTUsrName || !FTUsrPass || !FTUrlObj || !FTRemark) {
       alert("Please complete all inputs.");
       return;
     }
-  
+
     const postData = {
       method: "POST",
       headers: {
@@ -40,22 +39,22 @@ function ModalAdd() {
         FTUrlObj,
       }),
     };
-  
+
     try {
       // const res = await fetch(`http://localhost:3000/api/manage/listpass-api`, postData);
       const res = await fetch(`/api/manage/listpass-api`, postData);
 
       const response = await res.json();
       console.log("Response from API Page Add. :", response);
-    
-      if (response?.message == 'success') {
+
+      if (response?.message == "success") {
         await Swal.fire({
           title: "Success",
           text: "The data has been successfully added.",
           icon: "success",
           confirmButtonText: "Confirm",
         });
-      
+
         router.push("/components/Modal/ModalData");
       } else {
         Swal.fire({
@@ -65,23 +64,27 @@ function ModalAdd() {
           confirmButtonText: "Retry",
         });
       }
-      } catch (error) {
-        console.error(error);
-        Swal.fire({
-          title: "Error",
-          text: "Unable to establish a connection with the server.",
-          icon: "error",
-          confirmButtonText: "Retry",
-        });
-      }
-      
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        title: "Error",
+        text: "Unable to establish a connection with the server.",
+        icon: "error",
+        confirmButtonText: "Retry",
+      });
+    }
   };
-  
+
   return (
     <>
       <div className="mockup-browser border-2 bg-[#FFA403] w-full max-w-4xl mx-auto my-8 h-[695]">
-        <div className="mockup-browser-toolbar bg-[#FDA403]">
-          <div className="input font-kanit font-bold">เพิ่มรหัสผ่าน</div>
+        <div className="mockup-browser-toolbar flex justify-between items-center px-4 py-2">
+          <div className="input font-kanit font-bold text-white">
+            เพิ่มข้อมูล
+          </div>
+          <button className="btn btn-info" onClick={() => router.push(`/`)}>
+            <FiHome className="w-5 h-5" />
+          </button>
         </div>
         <div className="bg-base-100 flex justify-center">
           <div className="flex flex-col items-center w-full max-w-[300] lg:max-w-lg mx-auto mb-4">
@@ -134,7 +137,6 @@ function ModalAdd() {
                   className="w-full px-3 py-2 border-2 border-black bg-white rounded text-black"
                 />
               </div>
-
 
               <div className="mb-4">
                 <label className="block text-sm font-kanit font-semibold">

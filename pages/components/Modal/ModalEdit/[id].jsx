@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { FiSave, FiArrowLeft } from "react-icons/fi";
+import { FiSave, FiArrowLeft, FiHome } from "react-icons/fi";
 import Swal from "sweetalert2";
 
 const ModalEdit = () => {
@@ -23,7 +23,7 @@ const ModalEdit = () => {
       try {
         // const res = await fetch(
         //   `http://localhost:3000/api/manage/listpass-api?id=${id}`
-          
+
         // );
 
         const res = await fetch(`/api/manage/listpass-api?id=${id}`);
@@ -52,7 +52,7 @@ const ModalEdit = () => {
   // ฟังก์ชันสำหรับอัพเดตข้อมูลผู้ใช้
   const updateUser = async (event) => {
     event.preventDefault(); // ป้องกันการรีโหลดหน้าเมื่อกด Submit
-    if (!FTUsrAgent || !FTUsrName || !FTUsrPass ||  !FTRemark || !FTUrlObj) {
+    if (!FTUsrAgent || !FTUsrName || !FTUsrPass || !FTRemark || !FTUrlObj) {
       alert("Please complete all inputs.");
       return;
     }
@@ -77,7 +77,7 @@ const ModalEdit = () => {
       const res = await fetch(`/api/manage/listpass-api`, postData);
 
       const response = await res.json();
-      if (response?.message == 'success') {
+      if (response?.message == "success") {
         await Swal.fire({
           title: "Success",
           text: "Data updated successfully.",
@@ -106,8 +106,11 @@ const ModalEdit = () => {
 
   return (
     <div className="mockup-browser border-2 bg-[#FFA403] w-full max-w-4xl mx-auto my-8 h-[710]">
-      <div className="mockup-browser-toolbar bg-[#FDA403]">
-        <div className="input font-kanit text-white font-bold">แก้ไขรหัสผ่าน</div>
+      <div className="mockup-browser-toolbar flex justify-between items-center px-4 py-2">
+        <div className="input font-kanit font-bold text-white">แก้ไขข้อมูล</div>
+        <button className="btn btn-info" onClick={() => router.push(`/`)}>
+          <FiHome className="w-5 h-5" />
+        </button>
       </div>
       <div className="bg-base-100 flex justify-center">
         <div className="flex flex-col items-center w-full max-w-[300] lg:max-w-lg mx-auto mb-4">
@@ -115,7 +118,12 @@ const ModalEdit = () => {
             {/* Input Fields */}
             <div className="mb-4 mt-10">
               <label className="input input-bordered flex items-center gap-2 bg-gray-400 text-black font-semibold">
-                <input type="text" className="grow" value={FTUsrAgent} readOnly />
+                <input
+                  type="text"
+                  className="grow"
+                  value={FTUsrAgent}
+                  readOnly
+                />
                 <span className="badge badge-warning w-24 h-6">Agency</span>
               </label>
             </div>
@@ -156,7 +164,6 @@ const ModalEdit = () => {
               />
             </div>
 
-            
             <div className="mb-4">
               <label className="block text-sm font-kanit text-white font-semibold">
                 หมายเหตุ

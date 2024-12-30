@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 
 const ModalEdit = () => {
   const router = useRouter();
@@ -14,18 +14,17 @@ const ModalEdit = () => {
 
         const res = await fetch(`/api/manage/listpass-id-api/${id}`);
 
-
         if (!res.ok) {
-          throw new Error('Failed to fetch user data');
+          throw new Error("Failed to fetch user data");
         }
         const data = await res.json();
         setUserData(data);
       } catch (error) {
-        console.error('Error loading user data:', error);
+        console.error("Error loading user data:", error);
       }
     };
     fetchUserData();
-  }, [id]); 
+  }, [id]);
 
   return (
     <div>
