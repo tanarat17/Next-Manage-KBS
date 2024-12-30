@@ -23,16 +23,22 @@ const testDbConnection = async () => {
 
 testDbConnection();
 
-
 export default async function handler(req, res) {
   let connection;
+
   try {
     connection = await mysql.createConnection(dbConfig);
     const { method } = req;
 
+    console.log("Request query:", req.query); // Log the query parameters
+
     switch (method) {
       case "GET":
-        await handleGet(req, res, connection);
+        if (req.query.id) {
+          await handleGetById(req, res, connection); // Fetch by ID
+        } else {
+          await handleGet(req, res, connection); // Regular GET
+        }
         break;
       case "POST":
         await handlePost(req, res, connection);
@@ -45,13 +51,15 @@ export default async function handler(req, res) {
         break;
       default:
         res.setHeader("Allow", ["GET", "POST", "PUT", "DELETE"]);
-        res.status(405).json({ error: `Method ${method} not allowed` });
+        res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (error) {
-    console.error("Database operation failed:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Database connection failed:", error);
+    res.status(500).json({ error: "Database connection failed" });
   } finally {
-    if (connection) await connection.end();
+    if (connection) {
+      await connection.end();
+    }
   }
 }
 
@@ -132,7 +140,7 @@ async function handlePut(req, res, connection) {
   try {
     const [result] = await connection.execute(
       "UPDATE `tcnmanagepass` SET FTUsrAgent = ?, FTUsrName = ?, FTUsrPass = ?, FTUrlObj = ? , FTRemark = ? WHERE id = ?",
-      [FTUsrAgent, FTUsrName, FTUsrPass, FTUrlObj,FTRemark, id]
+      [FTUsrAgent, FTUsrName, FTUsrPass,FTUrlObj ,FTRemark, id]
     );
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Record not found" });
