@@ -22,7 +22,7 @@ function ModalAdd() {
   const addUser = async (event) => {
 
     event.preventDefault(); // ป้องกันการ reload หน้า
-    if (!FTUsrAgent || !FTUsrName || !FTUsrPass || !FTRemark) {
+    if (!FTUsrAgent || !FTUsrName || !FTUsrPass || !FTUrlObj || !FTRemark) {
       alert("Please complete all inputs.");
       return;
     }

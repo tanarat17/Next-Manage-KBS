@@ -26,7 +26,7 @@ const ModalEdit = () => {
           
         // );
 
-        const res = await fetch(`api/manage/listpass-api?id=${id}`);
+        const res = await fetch(`/api/manage/listpass-api?id=${id}`);
 
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -74,7 +74,7 @@ const ModalEdit = () => {
 
     try {
       // const res = await fetch(`http://localhost:3000/api/manage/listpass-api`, postData);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`, postData);
+      const res = await fetch(`/api/manage/listpass-api`, postData);
 
       const response = await res.json();
       if (response?.message == 'success') {

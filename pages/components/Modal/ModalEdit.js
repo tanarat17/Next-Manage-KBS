@@ -12,7 +12,7 @@ const ModalEdit = () => {
         // const res = await fetch(`http://localhost:3000/api/manage/listpass-id-api/${id}`);
         // const res = await fetch(`{process.env.NEXT_PUBLIC_API_URL}/${id}`);
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${id}`);
+        const res = await fetch(`/api/manage/listpass-id-api/${id}`);
 
 
         if (!res.ok) {
