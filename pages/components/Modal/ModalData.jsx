@@ -16,12 +16,33 @@ const ModalData = () => {
   const rowsPerPage = 10;
   const [filterOption, setFilterOption] = useState("All");
 
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       console.log(`${process.env.NEXT_PUBLIC_API_URL}/api/manage/listpass-api?filter=${filterOption}&searchQuery=${searchQuery}`)
+
+  //       //`http://localhost:3000/api/manage/listpass-api?filter=${filterOption}&searchQuery=${searchQuery}`
+  //       `${process.env.NEXT_PUBLIC_API_URL}?filter=${filterOption}&searchQuery=${searchQuery}`
+
+  //     );
+  //     const result = await response.json();
+  //     if (Array.isArray(result)) {
+  //       setData(result);
+  //     } else {
+  //       console.log("Data is not an array", result);
+  //       setData([]);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     setData([]);
+  //   }
+  // };
+  
+
   const fetchData = async () => {
     try {
       const response = await fetch(
-        //`http://localhost:3000/api/manage/listpass-api?filter=${filterOption}&searchQuery=${searchQuery}`
-        `${process.env.NEXT_PUBLIC_API_URL}?filter=${filterOption}&searchQuery=${searchQuery}`
-
+        `${process.env.NEXT_PUBLIC_API_URL}/api/manage/listpass-api?filter=${filterOption}&searchQuery=${searchQuery}`
       );
       const result = await response.json();
       if (Array.isArray(result)) {
@@ -35,6 +56,8 @@ const ModalData = () => {
       setData([]);
     }
   };
+
+  
 
   useEffect(() => {
     fetchData();

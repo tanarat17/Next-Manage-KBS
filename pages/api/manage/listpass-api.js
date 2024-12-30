@@ -23,22 +23,16 @@ const testDbConnection = async () => {
 
 testDbConnection();
 
+
 export default async function handler(req, res) {
   let connection;
-
   try {
     connection = await mysql.createConnection(dbConfig);
     const { method } = req;
 
-    console.log("Request query:", req.query); // Log the query parameters
-
     switch (method) {
       case "GET":
-        if (req.query.id) {
-          await handleGetById(req, res, connection); // Fetch by ID
-        } else {
-          await handleGet(req, res, connection); // Regular GET
-        }
+        await handleGet(req, res, connection);
         break;
       case "POST":
         await handlePost(req, res, connection);
@@ -51,15 +45,13 @@ export default async function handler(req, res) {
         break;
       default:
         res.setHeader("Allow", ["GET", "POST", "PUT", "DELETE"]);
-        res.status(405).end(`Method ${method} Not Allowed`);
+        res.status(405).json({ error: `Method ${method} not allowed` });
     }
   } catch (error) {
-    console.error("Database connection failed:", error);
-    res.status(500).json({ error: "Database connection failed" });
+    console.error("Database operation failed:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   } finally {
-    if (connection) {
-      await connection.end();
-    }
+    if (connection) await connection.end();
   }
 }
 
