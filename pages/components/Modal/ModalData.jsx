@@ -42,7 +42,7 @@ const ModalData = () => {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/manage/listpass-api?filter=${filterOption}&searchQuery=${searchQuery}`
+        `/api/manage/listpass-api?filter=${filterOption}&searchQuery=${searchQuery}`
       );
       const result = await response.json();
       if (Array.isArray(result)) {
@@ -94,7 +94,7 @@ const ModalData = () => {
   
       if (result.isConfirmed) {
         // เรียก API สำหรับลบข้อมูล
-        const res = await fetch(`http://localhost:3000/api/manage/listpass-api?id=${id}`, 
+        const res = await fetch(`/api/manage/listpass-api?id=${id}`, 
         {
           method: 'DELETE',
         });

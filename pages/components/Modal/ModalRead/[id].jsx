@@ -33,7 +33,7 @@ const ModalRead = () => {
       try {
         const res = await fetch(
           // `http://localhost:3000/api/manage/listpass-api?id=${id}`
-          `${process.env.NEXT_PUBLIC_API_URL}?id=${id}`
+          `/api/manage/listpass-api?id=${id}`
 
         );
         if (!res.ok) {

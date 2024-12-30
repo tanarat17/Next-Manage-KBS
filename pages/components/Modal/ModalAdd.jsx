@@ -43,7 +43,7 @@ function ModalAdd() {
   
     try {
       // const res = await fetch(`http://localhost:3000/api/manage/listpass-api`, postData);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`, postData);
+      const res = await fetch(`/api/manage/listpass-api`, postData);
 
       const response = await res.json();
       console.log("Response from API Page Add. :", response);
