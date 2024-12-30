@@ -52,7 +52,7 @@ const ModalEdit = () => {
   // ฟังก์ชันสำหรับอัพเดตข้อมูลผู้ใช้
   const updateUser = async (event) => {
     event.preventDefault(); // ป้องกันการรีโหลดหน้าเมื่อกด Submit
-    if (!FTUsrAgent || !FTUsrName || !FTUsrPass || !FTRemark) {
+    if (!FTUsrAgent || !FTUsrName || !FTUsrPass ||  !FTRemark || !FTUrlObj) {
       alert("Please complete all inputs.");
       return;
     }
